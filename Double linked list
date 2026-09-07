@@ -1,6 +1,6 @@
 //Program: Implementation of Doubly Linked List Operations
 //Author: Vyshakh Rajesh
-//Date: 06/09/26
+//Date: 07/09/26
 
 #include <stdio.h>
 #include <stdlib.h>
