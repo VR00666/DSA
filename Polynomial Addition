@@ -1,0 +1,220 @@
+//Program: Polynomial Addition using Insert Function into a Sorted Linked List 
+//Author: Vyshakh Rajesh 
+// Date:31/08/26 
+#include <stdio.h> 
+#include <stdlib.h> 
+struct Node 
+{ 
+float coeff; 
+int expo; 
+struct Node *link; 
+}; 
+// Function Prototypes 
+void insert(struct Node **head, float coeff, int expo); 
+struct Node *create(); 
+struct Node *addPolynomial(struct Node *poly1, struct Node *poly2); 
+void display(struct Node *head); 
+int main() 
+{ 
+struct Node *poly1 = NULL; 
+struct Node *poly2 = NULL; 
+struct Node *result = NULL; 
+printf("Enter First Polynomial\n"); 
+poly1 = create(); 
+printf("\nEnter Second Polynomial\n"); 
+poly2 = create(); 
+printf("\nFirst Polynomial: "); 
+display(poly1); 
+printf("Second Polynomial: "); 
+display(poly2); 
+result = addPolynomial(poly1, poly2); 
+printf("Sum of Polynomials: "); 
+display(result); 
+return 0; 
+} 
+// Insert term in descending order of exp 
+void insert(struct Node **head, float coeff, int expo) 
+{ 
+struct Node *newP, *temp; 
+// Ignore zero coefficient 
+if (coeff == 0) 
+        return; 
+ 
+    newP = (struct Node *)malloc(sizeof(struct Node)); 
+ 
+    if (newP == NULL) 
+    { 
+        printf("Memory Allocation Failed\n"); 
+        return; 
+    } 
+ 
+    newP->coeff = coeff; 
+    newP->expo = expo; 
+    newP->link = NULL; 
+ 
+    // Empty list 
+    if (*head == NULL) 
+    { 
+        *head = newP; 
+        return; 
+    } 
+ 
+    // Insert at beginning 
+    if (expo > (*head)->expo) 
+    { 
+        newP->link = *head; 
+        *head = newP; 
+        return; 
+    } 
+ 
+    // Same exponent as first node 
+    if (expo == (*head)->expo) 
+    { 
+        (*head)->coeff = (*head)->coeff + coeff; 
+ 
+        free(newP); 
+        return; 
+    } 
+ 
+    temp = *head; 
+ 
+    // Find correct position 
+    while (temp->link != NULL && 
+           temp->link->expo > expo) 
+    { 
+        temp = temp->link; 
+    } 
+ 
+    // Same exponent as next node 
+    if (temp->link != NULL && 
+        temp->link->expo == expo) 
+    { 
+        temp->link->coeff = 
+            temp->link->coeff + coeff; 
+ 
+        free(newP); 
+        return; 
+    } 
+ 
+    // Insert new node 
+    newP->link = temp->link; 
+    temp->link = newP; 
+} 
+ 
+ 
+// Create Polynomial 
+struct Node *create() 
+{ 
+    struct Node *head = NULL; 
+ 
+    int n; 
+    int i; 
+    float coeff; 
+    int expo; 
+ 
+    printf("Enter number of terms: "); 
+    scanf("%d", &n); 
+ 
+    for (i = 0; i < n; i++) 
+    { 
+        printf("Enter coefficient: "); 
+        scanf("%f", &coeff); 
+ 
+        printf("Enter exponent: "); 
+        scanf("%d", &expo); 
+ 
+        insert(&head, coeff, expo); 
+    } 
+ 
+    return head; 
+} 
+ 
+ 
+// Polynomial Addition 
+struct Node *addPolynomial(struct Node *poly1, 
+                           struct Node *poly2) 
+{ 
+    struct Node *result = NULL; 
+ 
+    while (poly1 != NULL && poly2 != NULL) 
+    { 
+        // Same exponent 
+        if (poly1->expo == poly2->expo) 
+        { 
+            insert(&result, 
+                   poly1->coeff + poly2->coeff, 
+                   poly1->expo); 
+ 
+            poly1 = poly1->link; 
+            poly2 = poly2->link; 
+        } 
+ 
+        // Exponent of poly1 is greater 
+        else if (poly1->expo > poly2->expo) 
+        { 
+            insert(&result, 
+                   poly1->coeff, 
+                   poly1->expo); 
+ 
+            poly1 = poly1->link; 
+        } 
+ 
+        // Exponent of poly2 is greater 
+        else 
+        { 
+            insert(&result, 
+                   poly2->coeff, 
+                   poly2->expo); 
+ 
+            poly2 = poly2->link; 
+        } 
+    } 
+ 
+    // Remaining terms of poly1 
+    while (poly1 != NULL) 
+    { 
+        insert(&result, 
+               poly1->coeff, 
+               poly1->expo); 
+ 
+        poly1 = poly1->link; 
+    } 
+ 
+    // Remaining terms of poly2 
+    while (poly2 != NULL) 
+    { 
+        insert(&result, 
+               poly2->coeff, 
+               poly2->expo); 
+ 
+        poly2 = poly2->link; 
+    } 
+ 
+    return result; 
+} 
+ 
+ 
+// Display Polynomial 
+void display(struct Node *head) 
+{ 
+    struct Node *temp = head; 
+ 
+    if (head == NULL) 
+    { 
+        printf("Polynomial is Empty\n"); 
+        return; 
+    } 
+ 
+    while (temp != NULL) 
+    { 
+        printf("%.0fx^%d", temp->coeff, temp->expo); 
+ 
+        if (temp->link != NULL) 
+            printf(" + "); 
+ 
+        temp = temp->link; 
+    } 
+ 
+    printf("\n"); 
+} 
+ 
