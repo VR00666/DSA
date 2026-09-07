@@ -1,0 +1,106 @@
+//Program:Cicular Queue 
+//Aim:WAP to implement circular queue using array 
+//Author;Vyshakh Rajesh 
+//Date:27/07/26 
+#include <stdio.h> 
+#define MAX 100 
+int queue[MAX]; 
+int front=-1; 
+int rear=-1; 
+int isFull(); 
+int isempty(); 
+void enqueue(int n); 
+int dequeue(); 
+int peek(); 
+int size(); 
+void display(); 
+ 
+int main(){ 
+       enqueue(10); 
+       enqueue(20); 
+       enqueue(30); 
+       enqueue(40); 
+       display(); 
+       printf("deleted ele is %d\n",dequeue()); 
+       display(); 
+       printf("the front element is %d\n",peek()); 
+       printf("the queue size is %d\n",size()); 
+ 
+ 
+} 
+//To check whether the queue is empty 
+int isempty(){ 
+           return(front==-1);   
+ 
+              } 
+//To check whether the queue is full 
+int isFull(){ 
+           return((rear+1)%MAX==front); 
+           
+ 
+            } 
+//To return the first element in the circular queue 
+int peek(){ 
+          if(isempty()){ 
+                   printf("queue is empty\n");                    
+                   return -1;    
+                         } 
+          return queue[front]; 
+         } 
+//To return the size of queue 
+int size(){ 
+       if(isempty()){ 
+                   printf("queue is empty\n"); 
+                   return -1; 
+                     } 
+       if(rear>front){  
+                   return(rear-front+1);} 
+       return (MAX-front+rear+1); 
+           } 
+//To enter an element to the queue 
+void enqueue(int n){ 
+       if(isFull()){ 
+                  printf("queue overflow  condition\n"); 
+                  return ;      
+                    } 
+        if(isempty()){ 
+                   front=rear=0; 
+                      } 
+       else{   
+        rear=(rear+1)%MAX;} 
+        queue[rear]=n; 
+                    } 
+//To remove an elemnet from the queue 
+int dequeue(){ 
+      if(isempty()){ 
+      printf("stack underflow\n"); 
+      return -1; 
+                    } 
+      int item=queue[front]; 
+      if(front==rear){ 
+              front=rear=-1;    
+                      } 
+      else{ 
+           front=(front+1)%MAX;         
+           } 
+      return item; 
+              } 
+ 
+//To display the elements of the queue 
+void display(){ 
+     if(isempty()){ 
+           printf("the stack is empty\n"); 
+           return; 
+                  }  
+      printf("the queue elements are\n"); 
+      int i=front; 
+      while(1){ 
+               printf("%d \n",queue[i]); 
+               if(i==rear) 
+                       break; 
+               i=(i+1)%MAX; 
+                } 
+     printf("\n"); 
+} 
+ 
+ 
