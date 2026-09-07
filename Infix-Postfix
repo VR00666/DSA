@@ -1,0 +1,140 @@
+/*
+Program: Infix to Postfix Conversion using Stack
+Aim: WAP to perform conversion of infix to postfix using stack
+Author: Vyshakh Rajesh
+Date: 10/08/2026
+*/
+
+#include <stdio.h>
+#include <ctype.h>
+
+#define MAX 100
+
+char stack[MAX];
+int top=-1;
+
+//Function Prototypes
+void push(char);
+char pop();
+char peek();
+int isEmpty();
+int precedence(char);
+
+int main(){
+
+    char infix[100],postfix[200];
+    int i=0,j=0;
+
+    printf("Enter the Infix Expression: ");
+    scanf("%s",infix);
+
+    while(infix[i]!='\0'){
+
+        char ch=infix[i];
+
+        //Operand
+        if(isdigit(ch)){
+
+            while(isdigit(infix[i])){
+
+                postfix[j++]=infix[i];
+                i++;
+            }
+
+            postfix[j++]=' ';
+            continue;
+        }
+
+        //Opening bracket
+        else if(ch=='('){
+
+            push(ch);
+        }
+
+        //Closing bracket
+        else if(ch==')'){
+
+            while(!isEmpty() && peek()!='('){
+
+                postfix[j++]=pop();
+                postfix[j++]=' ';
+            }
+
+            if(!isEmpty())
+                pop();
+        }
+
+        //Operator
+        else{
+
+            while(!isEmpty() &&
+                  peek()!='(' &&
+                  (precedence(peek())>precedence(ch) ||
+                  (precedence(peek())==precedence(ch) && ch!='^'))){
+
+                postfix[j++]=pop();
+                postfix[j++]=' ';
+            }
+
+            push(ch);
+        }
+
+        i++;
+    }
+
+    //Pop remaining operators
+    while(!isEmpty()){
+
+        postfix[j++]=pop();
+        postfix[j++]=' ';
+    }
+
+    postfix[j]='\0';
+
+    printf("Postfix Expression = %s\n",postfix);
+
+    return 0;
+}
+
+//Function Definitions
+
+void push(char ch){
+
+    stack[++top]=ch;
+}
+
+char pop(){
+
+    return stack[top--];
+}
+
+char peek(){
+
+    return stack[top];
+}
+
+int isEmpty(){
+
+    return(top==-1);
+}
+
+int precedence(char ch){
+
+    switch(ch){
+
+        case '^':
+            return 3;
+
+        case '*':
+        case '/':
+        case '%':
+            return 2;
+
+        case '+':
+        case '-':
+            return 1;
+
+        default:
+            return 0;
+    }
+}
