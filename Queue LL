@@ -1,0 +1,81 @@
+//Program: Queue using linked list 
+//Aim:WAP to implement queue operations using linked list 
+//Date:31/08/26 
+ 
+#include <stdio.h> 
+#include <stdlib.h> 
+struct node{ 
+       int data; 
+       struct node* next; 
+            }; 
+struct node *front=NULL; 
+struct node *rear=NULL; 
+int isempty(); 
+void dequeue(); 
+void display(); 
+void peek(); 
+void enqueue(int); 
+int main(){ 
+         
+        enqueue(10); 
+        enqueue(20); 
+        enqueue(30); 
+        display(); 
+        dequeue(); 
+        display(); 
+        peek(); 
+ 
+ 
+} 
+ 
+ 
+int isempty(){ 
+return(front==NULL); 
+             } 
+ 
+void enqueue(int data){ 
+        struct node *newnode; 
+        newnode=(struct node*)malloc(sizeof(struct node)); 
+        newnode->data=data; 
+        newnode->next=NULL; 
+        if(front==NULL){ 
+               front=newnode; 
+               rear=newnode; 
+               return;} 
+        rear->next=newnode; 
+        rear=newnode; 
+         
+                       }  
+void dequeue(){ 
+        if(isempty()){ 
+               printf("Stack empty\n"); 
+               return; } 
+        struct node *temp; 
+        temp=front; 
+        int item=temp->data; 
+        printf("The deleted element is %d\n",item); 
+        front=temp->next; 
+        free(temp);        
+} 
+void display(){ 
+       if(isempty()){ 
+              printf("The stack is empty\n"); 
+              return;} 
+ 
+       printf("The elements of the stcak are\n"); 
+       struct node *temp; 
+       temp=front; 
+       while(temp!=NULL){ 
+              printf("%d ",temp->data); 
+              temp=temp->next; 
+ 
+                        } 
+       printf("\n"); 
+               }\ 
+void peek(){ 
+      if(isempty()){ 
+            printf("The stack is empty\n"); 
+                    } 
+      printf("The topmost element is %d\n",front->data); 
+} 
+ 
