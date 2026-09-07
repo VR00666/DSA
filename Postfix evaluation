@@ -1,0 +1,130 @@
+/*
+Program: Postfix Expression Evaluation using Stack
+Aim: WAP to perform postfix expression evaluation using stack
+Author: Vyshakh Rajesh
+Date: 10/08/2026
+*/
+
+#include <stdio.h>
+#include <ctype.h>
+
+#define MAX 100
+
+int stack[MAX];
+int top=-1;
+
+//Function Prototypes
+void push(int);
+int pop();
+int isEmpty();
+int evaluatePostfix(char[]);
+
+int main(){
+
+    char postfix[100];
+    int result;
+
+    printf("Enter the Postfix Expression: ");
+    scanf(" %[^\n]",postfix);
+
+    result=evaluatePostfix(postfix);
+
+    printf("Result = %d\n",result);
+
+    return 0;
+}
+
+//Function Definitions
+
+void push(int value){
+
+    stack[++top]=value;
+}
+
+int pop(){
+
+    if(isEmpty()){
+        printf("Stack Underflow\n");
+        return -1;
+    }
+
+    return stack[top--];
+}
+
+int isEmpty(){
+
+    return(top==-1);
+}
+
+int evaluatePostfix(char postfix[]){
+
+    int i=0;
+    int a,b,result,num;
+
+    top=-1;
+
+    while(postfix[i]!='\0'){
+
+        char ch=postfix[i];
+
+        //Space
+        if(ch==' '){
+            i++;
+        }
+
+        //Operand
+        else if(isdigit(ch)){
+
+            num=0;
+
+            while(isdigit(postfix[i])){
+
+                num=num*10+(postfix[i]-'0');
+                i++;
+            }
+
+            push(num);
+        }
+
+        //Operator
+        else{
+
+            b=pop();
+            a=pop();
+
+            if(ch=='+')
+                result=a+b;
+
+            else if(ch=='-')
+                result=a-b;
+
+            else if(ch=='*')
+                result=a*b;
+
+            else if(ch=='/')
+                result=a/b;
+
+            else if(ch=='%')
+                result=a%b;
+
+            else if(ch=='^'){
+
+                result=1;
+
+                for(int j=0;j<b;j++)
+                    result=result*a;
+            }
+
+            else{
+
+                printf("Invalid Operator\n");
+                return -1;
+            }
+
+            push(result);
+            i++;
+        }
+    }
+
+    return pop();
+}
