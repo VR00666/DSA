@@ -1,0 +1,78 @@
+//Program: Stack using linked list 
+//Aim:WAP to implement stack operations using linked list 
+//Date:31/08/26 
+ 
+#include <stdio.h> 
+#include <stdlib.h> 
+struct node{ 
+       int data; 
+       struct node* next; 
+            }; 
+struct node *head=NULL; 
+int isempty(); 
+void pop(); 
+void display(); 
+void peek(); 
+void push(int); 
+int main(){ 
+        push(10); 
+        push(20); 
+        push(30); 
+        display(); 
+        pop(); 
+        display(); 
+        peek(); 
+ 
+ 
+} 
+ 
+ 
+int isempty(){ 
+return(head==NULL); 
+             } 
+ 
+void push(int data){ 
+        struct node *newnode; 
+        newnode=(struct node*)malloc(sizeof(struct node)); 
+        newnode->data=data; 
+        newnode->next=NULL; 
+        if(head==NULL){ 
+               head=newnode; 
+               return;} 
+        newnode->next=head; 
+        head=newnode; 
+                  
+}  
+void pop(){ 
+        if(isempty()){ 
+               printf("Stack empty\n"); 
+               return; } 
+        struct node *temp; 
+        temp=head; 
+        int item=temp->data; 
+        printf("The deleted element is %d\n",item); 
+        head=temp->next; 
+        free(temp);        
+} 
+void display(){ 
+       if(isempty()){ 
+              printf("The stack is empty\n"); 
+              return;} 
+ 
+       printf("The elements of the stcak are\n"); 
+       struct node *temp; 
+       temp=head; 
+       while(temp!=NULL){ 
+              printf("%d ",temp->data); 
+              temp=temp->next; 
+ 
+                        } 
+       printf("\n"); 
+               }\ 
+void peek(){ 
+      if(isempty()){ 
+            printf("The stack is empty\n"); 
+                    } 
+      printf("The topmost element is %d\n",head->data); 
+} 
+ 
