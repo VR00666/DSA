@@ -1,0 +1,164 @@
+//Program:Double ended Queue 
+//Aim:WAP to implement double ended queue using array 
+//Author;Vyshakh Rajesh 
+//Date:03/08/26 
+ 
+#include <stdio.h> 
+#define Max 5 
+int Dqueue[Max]; 
+int front=-1,rear=-1; 
+ 
+int isempty(); 
+int isfull(); 
+void enqueuefront(int); 
+void enqueuerear(int); 
+int dequeuefront(); 
+int dequeuerear(); 
+int peekfront(); 
+int peekrear(); 
+void display(); 
+int size(); 
+ 
+ 
+int main(){ 
+          enqueuerear(10); 
+          enqueuefront(20); 
+          enqueuefront(30); 
+          enqueuerear(10); 
+          display(); 
+          printf("The top element at the front is %d \n",peekfront()); 
+          printf("The last element in the queue is %d \n",peekrear()); 
+ 
+ 
+ 
+ 
+} 
+int isempty(){ 
+             return(front==-1);      
+ 
+} 
+int isfull(){ 
+            return(front==0 && rear==Max-1 || front==rear+1); 
+} 
+ 
+//To return the first element in the circular queue 
+int peekfront(){ 
+          if(isempty()){ 
+                   printf("queue is empty\n");                    
+                   return -1;    
+                         } 
+          return Dqueue[front]; 
+         } 
+int peekrear(){ 
+          if(isempty()){ 
+                   printf("queue is empty \n");     
+                        } 
+          return Dqueue[rear]; 
+ 
+ 
+                        } 
+//To enter an element to the queue 
+void enqueuefront(int n){ 
+       if(isfull()){ 
+                  printf("queue overflow  condition\n"); 
+                  return ;      
+                    } 
+        if(isempty()){ 
+                   front=rear=0; 
+                      } 
+       else if(front==0){ 
+                   front=Max-1; 
+                       } 
+       else{   
+                    front=front-1; 
+           } 
+        Dqueue[front]=n; 
+                    } 
+ void enqueuerear(int n){ 
+        if(isfull()){ 
+                   printf("queue overflow  condition\n"); 
+                   return ; 
+                     } 
+         if(isempty()){ 
+                    front=rear=0; 
+                       } 
+          else if(rear==Max-1){ 
+                    rear=0; 
+                      } 
+ 
+        else{ 
+         rear=rear+1; 
+            } 
+  
+         Dqueue[rear]=n; 
+                     } 
+ 
+ 
+//To remove an elemnet from the queue 
+int dequeuefront(){ 
+      if(isempty()){ 
+      printf("stack underflow\n"); 
+      return -1; 
+                    } 
+      int item=Dqueue[front]; 
+      if(front==rear){ 
+              front=rear=-1;    
+       
+                } 
+      else if(front==Max-1){ 
+              front=0; 
+} 
+      else{ 
+           front=front+1;         
+           } 
+      return item; 
+              } 
+ 
+int dequeuerear(){ 
+      if(isempty()){ 
+      printf("stack underflow\n"); 
+      return -1; 
+                    } 
+      int item=Dqueue[rear]; 
+      if(front==rear){ 
+              front=rear=-1;    
+                      } 
+      else if(rear==0){ 
+              rear=Max-1; 
+} 
+      else{ 
+             rear=rear-1;         
+           } 
+      return item; 
+              } 
+ 
+//To return the size of queue 
+int size(){ 
+       if(isempty()){ 
+                   printf("queue is empty\n"); 
+                   return -1; 
+                     } 
+       if(rear>front){  
+                   return(rear-front+1);} 
+       return (Max-front+rear+1); 
+           } 
+ 
+ 
+//To display the elements of the queue 
+void display(){ 
+     if(isempty()){ 
+           printf("the stack is empty\n"); 
+           return; 
+                  }  
+      printf("the queue elements are\n"); 
+      int i=front; 
+      while(1){ 
+               printf("%d \n",Dqueue[i]); 
+               if(i==rear) 
+                       break; 
+               i=(i+1)%Max; 
+                } 
+     printf("\n"); 
+} 
+ 
+ 
