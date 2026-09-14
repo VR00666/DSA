@@ -5,7 +5,7 @@
 
 #include <stdio.h>
 
-#define max 10
+#define max 2
 
 struct queue{
     int data;
@@ -26,21 +26,72 @@ void display();
 
 int main(){
 
-    enqueue(10,3);
-    enqueue(20,1);
-    enqueue(30,2);
+    int choice,d,p;
 
-    display();
+    do{
 
-    dequeue();
+        printf("\n--- Priority Queue Menu ---\n");
+        printf("1. Enqueue\n");
+        printf("2. Dequeue\n");
+        printf("3. Peek\n");
+        printf("4. Display\n");
+        printf("5. Check Empty\n");
+        printf("6. Check Full\n");
+        printf("7. Exit\n");
 
-    display();
+        printf("Enter your choice: ");
+        scanf("%d",&choice);
 
-    peek();
+        switch(choice){
+
+            case 1:
+                printf("Enter the data: ");
+                scanf("%d",&d);
+
+                printf("Enter the priority: ");
+                scanf("%d",&p);
+
+                enqueue(d,p);
+                break;
+
+            case 2:
+                dequeue();
+                break;
+
+            case 3:
+                peek();
+                break;
+
+            case 4:
+                display();
+                break;
+
+            case 5:
+                if(isempty())
+                    printf("Queue is empty\n");
+                else
+                    printf("Queue is not empty\n");
+                break;
+
+            case 6:
+                if(isfull())
+                    printf("Queue is full\n");
+                else
+                    printf("Queue is not full\n");
+                break;
+
+            case 7:
+                printf("Exiting...\n");
+                break;
+
+            default:
+                printf("Invalid choice\n");
+        }
+
+    }while(choice!=7);
 
     return 0;
 }
-
 //Function Definitions
 
 int isempty(){
