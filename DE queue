@@ -4,7 +4,7 @@
 //Date:03/08/26 
  
 #include <stdio.h> 
-#define Max 5 
+#define Max 2 
 int Dqueue[Max]; 
 int front=-1,rear=-1; 
  
@@ -20,19 +20,100 @@ void display();
 int size(); 
  
  
-int main(){ 
-          enqueuerear(10); 
-          enqueuefront(20); 
-          enqueuefront(30); 
-          enqueuerear(10); 
-          display(); 
-          printf("The top element at the front is %d \n",peekfront()); 
-          printf("The last element in the queue is %d \n",peekrear()); 
- 
- 
- 
- 
-} 
+int main(){
+    int choice,n;
+
+    do{
+        printf("\n--- Double Ended Queue Menu ---\n");
+        printf("1. Enqueue at Front\n");
+        printf("2. Enqueue at Rear\n");
+        printf("3. Dequeue from Front\n");
+        printf("4. Dequeue from Rear\n");
+        printf("5. Peek Front\n");
+        printf("6. Peek Rear\n");
+        printf("7. Display\n");
+        printf("8. Size\n");
+        printf("9. Check Empty\n");
+        printf("10. Check Full\n");
+        printf("11. Exit\n");
+
+        printf("Enter your choice: ");
+        scanf("%d",&choice);
+
+        switch(choice){
+
+            case 1:
+                printf("Enter the element: ");
+                scanf("%d",&n);
+                enqueuefront(n);
+                break;
+
+            case 2:
+                printf("Enter the element: ");
+                scanf("%d",&n);
+                enqueuerear(n);
+                break;
+
+            case 3:
+                n=dequeuefront();
+                if(n!=-1)
+                    printf("Deleted element from front is %d\n",n);
+                break;
+
+            case 4:
+                n=dequeuerear();
+                if(n!=-1)
+                    printf("Deleted element from rear is %d\n",n);
+                break;
+
+            case 5:
+                n=peekfront();
+                if(n!=-1)
+                    printf("The front element is %d\n",n);
+                break;
+
+            case 6:
+                n=peekrear();
+                if(n!=-1)
+                    printf("The rear element is %d\n",n);
+                break;
+
+            case 7:
+                display();
+                break;
+
+            case 8:
+                n=size();
+                if(n!=-1)
+                    printf("The queue size is %d\n",n);
+                break;
+
+            case 9:
+                if(isempty())
+                    printf("Queue is empty\n");
+                else
+                    printf("Queue is not empty\n");
+                break;
+
+            case 10:
+                if(isfull())
+                    printf("Queue is full\n");
+                else
+                    printf("Queue is not full\n");
+                break;
+
+            case 11:
+                printf("Exiting...\n");
+                break;
+
+            default:
+                printf("Invalid choice\n");
+        }
+
+    }while(choice!=11);
+
+    return 0;
+}
 int isempty(){ 
              return(front==-1);      
  
