@@ -138,3 +138,4 @@ int precedence(char ch){
             return 0;
     }
 }
+// SAMPLE INPUT 2+4*(12/6)-2^2
