@@ -128,3 +128,4 @@ int evaluatePostfix(char postfix[]){
 
     return pop();
 }
+// SAMPLE INPUT 2 4 12 6 / * + 2 2 ^ -
