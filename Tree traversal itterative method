@@ -1,0 +1,160 @@
+//Program: Implementation of Tree Traversals using Iteration
+//Aim: WAP to implement preorder, inorder and postorder tree traversals iteratively
+//Author: Vyshakh Rajesh
+//Date: 27/09/26
+
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX 100
+
+struct node{
+    int data;
+    struct node *left;
+    struct node *right;
+};
+
+struct node* stack[MAX];
+int top=-1;
+
+struct node* createnode(int);
+void push(struct node*);
+struct node* pop();
+void preorder(struct node*);
+void inorder(struct node*);
+void postorder(struct node*);
+
+int main(){
+
+    struct node *root;
+
+    root=createnode(1);
+
+    root->left=createnode(2);
+    root->right=createnode(3);
+
+    root->left->left=createnode(4);
+    root->left->right=createnode(5);
+
+    root->right->left=createnode(6);
+    root->right->right=createnode(7);
+
+    printf("Preorder traversal: ");
+    preorder(root);
+
+    printf("\nInorder traversal: ");
+    inorder(root);
+
+    printf("\nPostorder traversal: ");
+    postorder(root);
+
+    return 0;
+}
+
+struct node* createnode(int n){
+
+    struct node *newnode;
+
+    newnode=(struct node*)malloc(sizeof(struct node));
+
+    newnode->data=n;
+    newnode->left=NULL;
+    newnode->right=NULL;
+
+    return newnode;
+}
+
+void push(struct node *n){
+
+    if(top==MAX-1)
+        return;
+
+    stack[++top]=n;
+}
+
+struct node* pop(){
+
+    if(top==-1)
+        return NULL;
+
+    return stack[top--];
+}
+
+
+//Preorder: Root -> Left -> Right
+void preorder(struct node *root){
+
+    struct node *temp;
+
+    if(root==NULL)
+        return;
+
+    push(root);
+
+    while(top!=-1){
+
+        temp=pop();
+
+        printf("%d ",temp->data);
+
+        if(temp->right!=NULL)
+            push(temp->right);
+
+        if(temp->left!=NULL)
+            push(temp->left);
+    }
+}
+
+
+//Inorder: Left -> Root -> Right
+void inorder(struct node *root){
+
+    struct node *temp=root;
+
+    while(temp!=NULL || top!=-1){
+
+        while(temp!=NULL){
+
+            push(temp);
+            temp=temp->left;
+        }
+
+        temp=pop();
+
+        printf("%d ",temp->data);
+
+        temp=temp->right;
+    }
+}
+
+
+//Postorder: Left -> Right -> Root
+void postorder(struct node *root){
+
+    struct node *temp;
+    struct node *stack2[MAX];
+    int top2=-1;
+
+    if(root==NULL)
+        return;
+
+    push(root);
+
+    while(top!=-1){
+
+        temp=pop();
+        stack2[++top2]=temp;
+
+        if(temp->left!=NULL)
+            push(temp->left);
+
+        if(temp->right!=NULL)
+            push(temp->right);
+    }
+
+    while(top2!=-1){
+
+        temp=stack2[top2--];
+        printf("%d ",temp->data);
+    }
+}
