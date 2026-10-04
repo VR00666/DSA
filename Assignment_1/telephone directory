@@ -1,0 +1,431 @@
+//Program: Multilevel Telephone Directory System
+//Aim:WAP to implement a multilevel telephone directory using linked list
+//Author:Vyshakh Rajesh
+//Date:04/10/26
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+
+struct Contact{
+    char name[50];
+    char phone[20];
+    char email[50];
+    struct Contact *link;
+};
+
+struct IndexNode{
+    char letter;
+    struct Contact *contact;
+    struct IndexNode *link;
+};
+
+struct IndexNode *head=NULL;
+
+//Function Prototypes
+struct IndexNode* findIndex(char);
+struct IndexNode* createIndex(char);
+struct Contact* createContact(char[],char[],char[]);
+int phoneExists(char[]);
+void insertContact(char[],char[],char[]);
+void deleteContact(char[]);
+void searchContact(char[]);
+void display();
+void freeIndex(struct IndexNode*);
+
+int main(){
+
+    int choice;
+    char name[50];
+    char phone[20];
+    char email[50];
+
+    do{
+        printf("\n--- Telephone Directory Menu ---\n");
+        printf("1. Insert Contact\n");
+        printf("2. Delete Contact\n");
+        printf("3. Search Contact\n");
+        printf("4. Display Directory\n");
+        printf("5. Exit\n");
+
+        printf("Enter your choice: ");
+        scanf("%d",&choice);
+        getchar();
+
+        switch(choice){
+
+            case 1:
+                printf("Enter name: ");
+                fgets(name,sizeof(name),stdin);
+                name[strcspn(name,"\n")]='\0';
+
+                printf("Enter phone number: ");
+                fgets(phone,sizeof(phone),stdin);
+                phone[strcspn(phone,"\n")]='\0';
+
+                printf("Enter email: ");
+                fgets(email,sizeof(email),stdin);
+                email[strcspn(email,"\n")]='\0';
+
+                insertContact(name,phone,email);
+                break;
+
+            case 2:
+                printf("Enter name to delete: ");
+                fgets(name,sizeof(name),stdin);
+                name[strcspn(name,"\n")]='\0';
+
+                deleteContact(name);
+                break;
+
+            case 3:
+                printf("Enter name prefix to search: ");
+                fgets(name,sizeof(name),stdin);
+                name[strcspn(name,"\n")]='\0';
+
+                searchContact(name);
+                break;
+
+            case 4:
+                display();
+                break;
+
+            case 5:
+                printf("Exiting...\n");
+                break;
+
+            default:
+                printf("Invalid choice\n");
+        }
+
+    }while(choice!=5);
+
+    return 0;
+}
+
+
+//To find the index node for a letter
+struct IndexNode* findIndex(char letter){
+
+    struct IndexNode *temp=head;
+
+    while(temp!=NULL && temp->letter<letter)
+        temp=temp->link;
+
+    if(temp!=NULL && temp->letter==letter)
+        return temp;
+
+    return NULL;
+}
+
+
+//To create a new index node
+struct IndexNode* createIndex(char letter){
+
+    struct IndexNode *newNode;
+
+    newNode=(struct IndexNode*)malloc(sizeof(struct IndexNode));
+
+    if(newNode==NULL){
+        printf("Memory Allocation Failed\n");
+        return NULL;
+    }
+
+    newNode->letter=letter;
+    newNode->contact=NULL;
+    newNode->link=NULL;
+
+    return newNode;
+}
+
+
+//To create a new contact node
+struct Contact* createContact(char name[],char phone[],char email[]){
+
+    struct Contact *newNode;
+
+    newNode=(struct Contact*)malloc(sizeof(struct Contact));
+
+    if(newNode==NULL){
+        printf("Memory Allocation Failed\n");
+        return NULL;
+    }
+
+    strcpy(newNode->name,name);
+    strcpy(newNode->phone,phone);
+    strcpy(newNode->email,email);
+
+    newNode->link=NULL;
+
+    return newNode;
+}
+
+
+//To check whether the phone number already exists
+int phoneExists(char phone[]){
+
+    struct IndexNode *index;
+    struct Contact *temp;
+
+    index=head;
+
+    while(index!=NULL){
+
+        temp=index->contact;
+
+        while(temp!=NULL){
+
+            if(strcmp(temp->phone,phone)==0)
+                return 1;
+
+            temp=temp->link;
+        }
+
+        index=index->link;
+    }
+
+    return 0;
+}
+
+
+//To insert a new contact
+void insertContact(char name[],char phone[],char email[]){
+
+    struct IndexNode *index;
+    struct IndexNode *newIndex;
+    struct IndexNode *prevIndex;
+    struct Contact *newContact;
+    struct Contact *temp;
+
+    char letter;
+
+    if(name[0]=='\0'){
+        printf("Invalid name\n");
+        return;
+    }
+
+    letter=toupper(name[0]);
+
+    if(letter<'A' || letter>'Z'){
+        printf("Name must start with a letter A-Z\n");
+        return;
+    }
+
+    //Check duplicate phone number
+    if(phoneExists(phone)){
+        printf("Duplicate phone number is not allowed\n");
+        return;
+    }
+
+    //Find existing index node
+    index=findIndex(letter);
+
+    //Create index node if it does not exist
+    if(index==NULL){
+
+        newIndex=createIndex(letter);
+
+        if(newIndex==NULL)
+            return;
+
+        //Insert index node in sorted order
+        if(head==NULL || head->letter>letter){
+
+            newIndex->link=head;
+            head=newIndex;
+            index=newIndex;
+        }
+        else{
+
+            prevIndex=head;
+
+            while(prevIndex->link!=NULL &&
+                  prevIndex->link->letter<letter){
+
+                prevIndex=prevIndex->link;
+            }
+
+            newIndex->link=prevIndex->link;
+            prevIndex->link=newIndex;
+
+            index=newIndex;
+        }
+    }
+
+    newContact=createContact(name,phone,email);
+
+    if(newContact==NULL)
+        return;
+
+    //Insert contact in alphabetical order
+    if(index->contact==NULL ||
+       strcasecmp(name,index->contact->name)<0){
+
+        newContact->link=index->contact;
+        index->contact=newContact;
+    }
+    else{
+
+        temp=index->contact;
+
+        while(temp->link!=NULL &&
+              strcasecmp(temp->link->name,name)<=0){
+
+            temp=temp->link;
+        }
+
+        newContact->link=temp->link;
+        temp->link=newContact;
+    }
+
+    printf("Contact inserted successfully\n");
+}
+
+
+//To delete a contact by name
+void deleteContact(char name[]){
+
+    struct IndexNode *index;
+    struct IndexNode *prevIndex=NULL;
+    struct Contact *temp;
+    struct Contact *prevContact;
+    char letter;
+
+    if(name[0]=='\0'){
+        printf("Invalid name\n");
+        return;
+    }
+
+    letter=toupper(name[0]);
+
+    index=head;
+
+    while(index!=NULL && index->letter<letter){
+
+        prevIndex=index;
+        index=index->link;
+    }
+
+    if(index==NULL || index->letter!=letter){
+
+        printf("Contact not found\n");
+        return;
+    }
+
+    temp=index->contact;
+    prevContact=NULL;
+
+    while(temp!=NULL){
+
+        if(strcasecmp(temp->name,name)==0){
+
+            if(prevContact==NULL)
+                index->contact=temp->link;
+            else
+                prevContact->link=temp->link;
+
+            free(temp);
+
+            printf("Contact deleted successfully\n");
+
+            //Delete index node if no contacts remain
+            if(index->contact==NULL){
+
+                if(prevIndex==NULL)
+                    head=index->link;
+                else
+                    prevIndex->link=index->link;
+
+                free(index);
+            }
+
+            return;
+        }
+
+        prevContact=temp;
+        temp=temp->link;
+    }
+
+    printf("Contact not found\n");
+}
+
+
+//To search contacts using a name prefix
+void searchContact(char prefix[]){
+
+    struct IndexNode *index;
+    struct Contact *temp;
+
+    int length;
+    int found=0;
+    char letter;
+
+    if(prefix[0]=='\0'){
+        printf("Invalid search string\n");
+        return;
+    }
+
+    letter=toupper(prefix[0]);
+    length=strlen(prefix);
+
+    index=findIndex(letter);
+
+    if(index==NULL){
+        printf("No matching contacts found\n");
+        return;
+    }
+
+    temp=index->contact;
+
+    while(temp!=NULL){
+
+        if(strncasecmp(temp->name,prefix,length)==0){
+
+            printf("\nName: %s",temp->name);
+            printf("\nPhone: %s",temp->phone);
+            printf("\nEmail: %s\n",temp->email);
+
+            found=1;
+        }
+
+        temp=temp->link;
+    }
+
+    if(found==0)
+        printf("No matching contacts found\n");
+}
+
+
+//To display the complete directory
+void display(){
+
+    struct IndexNode *index;
+    struct Contact *temp;
+
+    if(head==NULL){
+
+        printf("Telephone Directory is empty\n");
+        return;
+    }
+
+    index=head;
+
+    while(index!=NULL){
+
+        printf("\n[%c]\n",index->letter);
+
+        temp=index->contact;
+
+        while(temp!=NULL){
+
+            printf("Name: %s\n",temp->name);
+            printf("Phone: %s\n",temp->phone);
+            printf("Email: %s\n",temp->email);
+
+            temp=temp->link;
+        }
+
+        index=index->link;
+    }
+}
