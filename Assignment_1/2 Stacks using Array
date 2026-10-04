@@ -1,0 +1,291 @@
+//Program:Two Stacks using Single Array
+//Aim:WAP to implement two stacks using a single one dimensional array
+//Author:Vyshakh Rajesh
+//Date:04/10/26
+
+#include <stdio.h>
+#define MAX 10
+
+int stack[MAX];
+int top1=-1;
+int top2=MAX;
+
+int isFull();
+int isempty1();
+int isempty2();
+void push1(int n);
+void push2(int n);
+int pop1();
+int pop2();
+int peek1();
+int peek2();
+int size1();
+int size2();
+void display1();
+void display2();
+
+int main(){
+
+    int choice,n;
+
+    do{
+        printf("\n--- Two Stacks Menu ---\n");
+        printf("1. Push in Stack 1\n");
+        printf("2. Push in Stack 2\n");
+        printf("3. Pop from Stack 1\n");
+        printf("4. Pop from Stack 2\n");
+        printf("5. Peek Stack 1\n");
+        printf("6. Peek Stack 2\n");
+        printf("7. Size of Stack 1\n");
+        printf("8. Size of Stack 2\n");
+        printf("9. Display Stack 1\n");
+        printf("10. Display Stack 2\n");
+        printf("11. Check Stack 1 Empty\n");
+        printf("12. Check Stack 2 Empty\n");
+        printf("13. Check Full\n");
+        printf("14. Exit\n");
+
+        printf("Enter your choice: ");
+        scanf("%d",&choice);
+
+        switch(choice){
+
+            case 1:
+                printf("Enter the element: ");
+                scanf("%d",&n);
+                push1(n);
+                break;
+
+            case 2:
+                printf("Enter the element: ");
+                scanf("%d",&n);
+                push2(n);
+                break;
+
+            case 3:
+                n=pop1();
+                if(n!=-1)
+                    printf("Deleted element from Stack 1 is %d\n",n);
+                break;
+
+            case 4:
+                n=pop2();
+                if(n!=-1)
+                    printf("Deleted element from Stack 2 is %d\n",n);
+                break;
+
+            case 5:
+                n=peek1();
+                if(n!=-1)
+                    printf("Top element of Stack 1 is %d\n",n);
+                break;
+
+            case 6:
+                n=peek2();
+                if(n!=-1)
+                    printf("Top element of Stack 2 is %d\n",n);
+                break;
+
+            case 7:
+                n=size1();
+                if(n!=-1)
+                    printf("Size of Stack 1 is %d\n",n);
+                break;
+
+            case 8:
+                n=size2();
+                if(n!=-1)
+                    printf("Size of Stack 2 is %d\n",n);
+                break;
+
+            case 9:
+                display1();
+                break;
+
+            case 10:
+                display2();
+                break;
+
+            case 11:
+                if(isempty1())
+                    printf("Stack 1 is empty\n");
+                else
+                    printf("Stack 1 is not empty\n");
+                break;
+
+            case 12:
+                if(isempty2())
+                    printf("Stack 2 is empty\n");
+                else
+                    printf("Stack 2 is not empty\n");
+                break;
+
+            case 13:
+                if(isFull())
+                    printf("Array is full\n");
+                else
+                    printf("Array is not full\n");
+                break;
+
+            case 14:
+                printf("Exiting...\n");
+                break;
+
+            default:
+                printf("Invalid choice\n");
+        }
+
+    }while(choice!=14);
+
+    return 0;
+}
+
+
+//To check whether the array is full
+int isFull(){
+    return(top1+1==top2);
+}
+
+
+//To check whether Stack 1 is empty
+int isempty1(){
+    return(top1==-1);
+}
+
+
+//To check whether Stack 2 is empty
+int isempty2(){
+    return(top2==MAX);
+}
+
+
+//To insert an element into Stack 1
+void push1(int n){
+    if(isFull()){
+        printf("Stack overflow condition\n");
+        return;
+    }
+
+    top1++;
+    stack[top1]=n;
+}
+
+
+//To insert an element into Stack 2
+void push2(int n){
+    if(isFull()){
+        printf("Stack overflow condition\n");
+        return;
+    }
+
+    top2--;
+    stack[top2]=n;
+}
+
+
+//To remove an element from Stack 1
+int pop1(){
+    if(isempty1()){
+        printf("Stack 1 is empty\n");
+        return -1;
+    }
+
+    int item=stack[top1];
+    top1--;
+
+    return item;
+}
+
+
+//To remove an element from Stack 2
+int pop2(){
+    if(isempty2()){
+        printf("Stack 2 is empty\n");
+        return -1;
+    }
+
+    int item=stack[top2];
+    top2++;
+
+    return item;
+}
+
+
+//To return the top element of Stack 1
+int peek1(){
+    if(isempty1()){
+        printf("Stack 1 is empty\n");
+        return -1;
+    }
+
+    return stack[top1];
+}
+
+
+//To return the top element of Stack 2
+int peek2(){
+    if(isempty2()){
+        printf("Stack 2 is empty\n");
+        return -1;
+    }
+
+    return stack[top2];
+}
+
+
+//To return the size of Stack 1
+int size1(){
+    if(isempty1()){
+        printf("Stack 1 is empty\n");
+        return -1;
+    }
+
+    return top1+1;
+}
+
+
+//To return the size of Stack 2
+int size2(){
+    if(isempty2()){
+        printf("Stack 2 is empty\n");
+        return -1;
+    }
+
+    return MAX-top2;
+}
+
+
+//To display the elements of Stack 1
+void display1(){
+    int i;
+
+    if(isempty1()){
+        printf("Stack 1 is empty\n");
+        return;
+    }
+
+    printf("Stack 1 elements are\n");
+
+    for(i=top1;i>=0;i--)
+        printf("%d\n",stack[i]);
+
+    printf("\n");
+}
+
+
+//To display the elements of Stack 2
+void display2(){
+    int i;
+
+    if(isempty2()){
+        printf("Stack 2 is empty\n");
+        return;
+    }
+
+    printf("Stack 2 elements are\n");
+
+    for(i=top2;i<MAX;i++)
+        printf("%d\n",stack[i]);
+
+    printf("\n");
+}
