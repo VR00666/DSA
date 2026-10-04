@@ -1,0 +1,192 @@
+//Program: Priority Queue using Linked List
+//Aim:WAP to implement priority queue using linked list
+//Author:Vyshakh Rajesh
+//Date:04/10/26
+
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node{
+    int data;
+    int priority;
+    struct Node *link;
+};
+
+struct Node *front=NULL;
+
+//Function Prototypes
+void enqueue(int,int);
+void dequeue();
+void peek();
+void display();
+int isEmpty();
+
+int main(){
+
+    int choice,data,priority;
+
+    do{
+        printf("\n--- Priority Queue Menu ---\n");
+        printf("1. Enqueue\n");
+        printf("2. Dequeue\n");
+        printf("3. Peek\n");
+        printf("4. Display\n");
+        printf("5. Check Empty\n");
+        printf("6. Exit\n");
+
+        printf("Enter your choice: ");
+        scanf("%d",&choice);
+
+        switch(choice){
+
+            case 1:
+                printf("Enter the data: ");
+                scanf("%d",&data);
+
+                printf("Enter the priority: ");
+                scanf("%d",&priority);
+
+                enqueue(data,priority);
+                break;
+
+            case 2:
+                dequeue();
+                break;
+
+            case 3:
+                peek();
+                break;
+
+            case 4:
+                display();
+                break;
+
+            case 5:
+                if(isEmpty())
+                    printf("Priority Queue is empty\n");
+                else
+                    printf("Priority Queue is not empty\n");
+                break;
+
+            case 6:
+                printf("Exiting...\n");
+                break;
+
+            default:
+                printf("Invalid choice\n");
+        }
+
+    }while(choice!=6);
+
+    return 0;
+}
+
+
+//To check whether the priority queue is empty
+int isEmpty(){
+
+    return(front==NULL);
+}
+
+
+//To insert an element into the priority queue
+void enqueue(int data,int priority){
+
+    struct Node *newNode,*temp;
+
+    newNode=(struct Node*)malloc(sizeof(struct Node));
+
+    if(newNode==NULL){
+        printf("Memory Allocation Failed\n");
+        return;
+    }
+
+    newNode->data=data;
+    newNode->priority=priority;
+    newNode->link=NULL;
+
+    //Empty queue
+    if(front==NULL){
+        front=newNode;
+        return;
+    }
+
+    //Insert before front
+    if(priority<front->priority){
+
+        newNode->link=front;
+        front=newNode;
+        return;
+    }
+
+    temp=front;
+
+    //Move to the correct position
+    while(temp->link!=NULL &&
+          temp->link->priority<=priority){
+
+        temp=temp->link;
+    }
+
+    newNode->link=temp->link;
+    temp->link=newNode;
+}
+
+
+//To delete the highest priority element
+void dequeue(){
+
+    struct Node *temp;
+
+    if(isEmpty()){
+
+        printf("Priority Queue Underflow\n");
+        return;
+    }
+
+    temp=front;
+
+    printf("Deleted Element = %d\n",front->data);
+
+    front=front->link;
+
+    free(temp);
+}
+
+
+//To return the highest priority element
+void peek(){
+
+    if(isEmpty()){
+
+        printf("Priority Queue is Empty\n");
+        return;
+    }
+
+    printf("Highest Priority Element = %d\n",front->data);
+    printf("Priority = %d\n",front->priority);
+}
+
+
+//To display the priority queue
+void display(){
+
+    struct Node *temp;
+
+    if(isEmpty()){
+
+        printf("Priority Queue is Empty\n");
+        return;
+    }
+
+    temp=front;
+
+    printf("Data\tPriority\n");
+
+    while(temp!=NULL){
+
+        printf("%d\t%d\n",temp->data,temp->priority);
+
+        temp=temp->link;
+    }
+}
