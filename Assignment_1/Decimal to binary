@@ -1,0 +1,89 @@
+
+//Program: Decimal to Binary Conversion using Stack
+//Author: Vyshakh Rajesh
+//Date:02/10/2026
+
+#include <stdio.h>
+
+#define MAX 100
+
+int stack[MAX];
+int top=-1;
+
+//Function Prototypes
+int isEmpty();
+int isFull();
+void push(int);
+int pop();
+
+int main(){
+
+    int n,rem;
+
+    printf("Enter the decimal number: ");
+    scanf("%d",&n);
+
+    if(n==0){
+        printf("Binary = 0\n");
+        return 0;
+    }
+
+    //Convert decimal to binary
+    while(n>0){
+
+        rem=n%2;
+        push(rem);
+
+        n=n/2;
+    }
+
+    //Pop and display binary digits
+    printf("Binary = ");
+
+    while(!isEmpty()){
+
+        printf("%d",pop());
+    }
+
+    printf("\n");
+
+    return 0;
+}
+
+//Function Definitions
+
+int isEmpty(){
+
+    return(top==-1);
+}
+
+int isFull(){
+
+    return(top==MAX-1);
+}
+
+void push(int data){
+
+    if(isFull()){
+        printf("Stack Overflow\n");
+        return;
+    }
+
+    top++;
+    stack[top]=data;
+}
+
+int pop(){
+
+    int data;
+
+    if(isEmpty()){
+        printf("Stack Underflow\n");
+        return -1;
+    }
+
+    data=stack[top];
+    top--;
+
+    return data;
+}
