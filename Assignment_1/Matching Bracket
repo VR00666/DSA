@@ -1,5 +1,6 @@
 //Program: C program to check for matching brackets using stack
 //Author: Vyshakh Rajesh
+//Date:02/10/2026
 
 #include <stdio.h>
 
