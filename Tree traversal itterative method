@@ -1,7 +1,7 @@
 //Program: Implementation of Tree Traversals using Iteration
-//Aim: WAP to implement preorder, inorder and postorder tree traversals iteratively
-//Author: Vyshakh Rajesh
-//Date: 27/09/26
+//Aim:WAP to implement preorder, inorder and postorder tree traversals iteratively
+//Author:Vyshakh Rajesh
+//Date:04/10/26
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,7 +17,10 @@ struct node{
 struct node* stack[MAX];
 int top=-1;
 
+//Function Prototypes
 struct node* createnode(int);
+struct node* search(struct node*,int);
+struct node* insert(struct node*,int,int,char);
 void push(struct node*);
 struct node* pop();
 void preorder(struct node*);
@@ -26,31 +29,92 @@ void postorder(struct node*);
 
 int main(){
 
-    struct node *root;
+    struct node *root=NULL;
+    int choice,data,parent;
+    char side;
 
-    root=createnode(1);
+    do{
+        printf("\n--- Binary Tree Menu ---\n");
+        printf("1. Insert Node\n");
+        printf("2. Preorder Traversal\n");
+        printf("3. Inorder Traversal\n");
+        printf("4. Postorder Traversal\n");
+        printf("5. Display All Traversals\n");
+        printf("6. Exit\n");
 
-    root->left=createnode(2);
-    root->right=createnode(3);
+        printf("Enter your choice: ");
+        scanf("%d",&choice);
 
-    root->left->left=createnode(4);
-    root->left->right=createnode(5);
+        switch(choice){
 
-    root->right->left=createnode(6);
-    root->right->right=createnode(7);
+            case 1:
+                printf("Enter the data: ");
+                scanf("%d",&data);
 
-    printf("Preorder traversal: ");
-    preorder(root);
+                if(root==NULL){
 
-    printf("\nInorder traversal: ");
-    inorder(root);
+                    root=createnode(data);
+                    printf("Root node inserted successfully\n");
+                }
+                else{
 
-    printf("\nPostorder traversal: ");
-    postorder(root);
+                    printf("Enter the parent node: ");
+                    scanf("%d",&parent);
+
+                    printf("Enter L for left child or R for right child: ");
+                    scanf(" %c",&side);
+
+                    root=insert(root,data,parent,side);
+                }
+
+                break;
+
+            case 2:
+                printf("Preorder traversal: ");
+                preorder(root);
+                printf("\n");
+                break;
+
+            case 3:
+                printf("Inorder traversal: ");
+                inorder(root);
+                printf("\n");
+                break;
+
+            case 4:
+                printf("Postorder traversal: ");
+                postorder(root);
+                printf("\n");
+                break;
+
+            case 5:
+                printf("Preorder traversal: ");
+                preorder(root);
+
+                printf("\nInorder traversal: ");
+                inorder(root);
+
+                printf("\nPostorder traversal: ");
+                postorder(root);
+
+                printf("\n");
+                break;
+
+            case 6:
+                printf("Exiting...\n");
+                break;
+
+            default:
+                printf("Invalid choice\n");
+        }
+
+    }while(choice!=6);
 
     return 0;
 }
 
+
+//To create a new node
 struct node* createnode(int n){
 
     struct node *newnode;
@@ -64,6 +128,79 @@ struct node* createnode(int n){
     return newnode;
 }
 
+
+//To search for a node
+struct node* search(struct node *root,int data){
+
+    struct node *temp;
+
+    if(root==NULL)
+        return NULL;
+
+    if(root->data==data)
+        return root;
+
+    temp=search(root->left,data);
+
+    if(temp!=NULL)
+        return temp;
+
+    return search(root->right,data);
+}
+
+
+//To insert a node
+struct node* insert(struct node *root,int data,int parent,char side){
+
+    struct node *parentNode;
+    struct node *newnode;
+
+    parentNode=search(root,parent);
+
+    if(parentNode==NULL){
+
+        printf("Parent node not found\n");
+        return root;
+    }
+
+    if(side=='L' || side=='l'){
+
+        if(parentNode->left!=NULL){
+
+            printf("Left child already exists\n");
+            return root;
+        }
+
+        newnode=createnode(data);
+        parentNode->left=newnode;
+
+        printf("Node inserted successfully\n");
+    }
+
+    else if(side=='R' || side=='r'){
+
+        if(parentNode->right!=NULL){
+
+            printf("Right child already exists\n");
+            return root;
+        }
+
+        newnode=createnode(data);
+        parentNode->right=newnode;
+
+        printf("Node inserted successfully\n");
+    }
+
+    else{
+
+        printf("Invalid choice\n");
+    }
+
+    return root;
+}
+
+
+//To push a node into the stack
 void push(struct node *n){
 
     if(top==MAX-1)
@@ -72,6 +209,8 @@ void push(struct node *n){
     stack[++top]=n;
 }
 
+
+//To pop a node from the stack
 struct node* pop(){
 
     if(top==-1)
@@ -81,7 +220,7 @@ struct node* pop(){
 }
 
 
-//Preorder: Root -> Left -> Right
+//To perform preorder traversal iteratively
 void preorder(struct node *root){
 
     struct node *temp;
@@ -89,6 +228,7 @@ void preorder(struct node *root){
     if(root==NULL)
         return;
 
+    top=-1;
     push(root);
 
     while(top!=-1){
@@ -106,10 +246,12 @@ void preorder(struct node *root){
 }
 
 
-//Inorder: Left -> Root -> Right
+//To perform inorder traversal iteratively
 void inorder(struct node *root){
 
     struct node *temp=root;
+
+    top=-1;
 
     while(temp!=NULL || top!=-1){
 
@@ -128,7 +270,7 @@ void inorder(struct node *root){
 }
 
 
-//Postorder: Left -> Right -> Root
+//To perform postorder traversal iteratively
 void postorder(struct node *root){
 
     struct node *temp;
@@ -138,11 +280,13 @@ void postorder(struct node *root){
     if(root==NULL)
         return;
 
+    top=-1;
     push(root);
 
     while(top!=-1){
 
         temp=pop();
+
         stack2[++top2]=temp;
 
         if(temp->left!=NULL)
@@ -155,6 +299,7 @@ void postorder(struct node *root){
     while(top2!=-1){
 
         temp=stack2[top2--];
+
         printf("%d ",temp->data);
     }
 }
